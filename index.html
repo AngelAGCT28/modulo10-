@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Cédula</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2196F3, #21CBF3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+            color: #fff;
+            transition: background 0.5s ease;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            position: relative;
+            z-index: 1;
+            color: #333; /* Cambié el color del texto a un gris oscuro */
+        }
+        button {
+            background-color: #FF5722;
+            color: #ffffff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        button:hover {
+            background-color: #E64A19;
+            transform: translateY(-3px);
+        }
+        #resultado {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+            z-index: 1;
+        }
+        .valido {
+            color: #4CAF50;
+        }
+        .no-valido {
+            color: #F44336;
+        }
+        .wave {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: wave-animation 10s infinite linear;
+            z-index: 0;
+        }
+        @keyframes wave-animation {
+            0% {
+                transform: translate(-50%, -50%) scale(0.7);
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+        @media (max-width: 500px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 20px;
+            }
+            button {
+                width: 100%;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wave"></div>
+    <div class="container">
+        <h2>Validación de Cédula</h2>
+        <button onclick="validarCedulaPrompt()">Validar Cédula</button>
+        <p id="resultado"></p>
+    </div>
+
+    <script>
+        function validarCedula(cedula) {
+            cedula = cedula.replace(/\D/g, '');
+            if (cedula.length !== 11) {
+                return false;
+            }
+
+            let suma = 0;
+            for (let i = 0; i < cedula.length - 1; i++) {
+                let digito = parseInt(cedula[i]);
+                if (i % 2 !== 0) {
+                    digito *= 2;
+                }
+                if (digito > 9) {
+                    digito -= 9;
+                }
+                suma += digito;
+            }
+
+            const digitoVerificador = parseInt(cedula[cedula.length - 1]);
+            const modulo = (10 - (suma % 10)) % 10;
+
+            return modulo === digitoVerificador;
+        }
+
+        function validarCedulaPrompt() {
+            const cedula = prompt("Por favor, ingrese su cédula:");
+            if (!cedula) {
+                alert("No se ha ingresado ninguna cédula.");
+                return;
+            }
+
+            const esValida = validarCedula(cedula);
+            const resultado = document.getElementById("resultado");
+            if (esValida) {
+                resultado.textContent = "La cédula es válida.";
+                resultado.className = "valido";
+            } else {
+                resultado.textContent = "La cédula no es válida.";
+                resultado.className = "no-valido";
+            }
+        }
+    </script>
+
+</body>
+</html>
